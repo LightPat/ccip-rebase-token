@@ -8,6 +8,14 @@ This is a section of the Cyfrin Advanced Foundry Course.
 
 This is a rebase token that can be operated across chains using Chainlink's trusted oracle network.
 
+1. A protocol that allows users to deposit into a vault and in return, receive rebase tokens that represent their underlying balance
+2. Rebase token -> balanceOf is dynamic to show the changing balance with time
+  - balance increases linearly with time
+  - mint tokens to our users everytime they perform an action (minting, burning, transferring, or bridging)
+3. Interest rate
+  - Individually set an interest rate for each user based on some global interest rate of the protocol at the time the user deposits into the vault
+  - This global interest rate can only decrease to incentivize/reward early adopters
+
 - [CCIP Rebase Token](#ccip-rebase-token)
 - [Getting Started](#getting-started)
   - [Requirements](#requirements)
