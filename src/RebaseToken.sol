@@ -38,6 +38,11 @@ contract RebaseToken is ERC20, Ownable, AccessControl {
         emit InterestRateSet(_newInterestRate);
     }
 
+    /**
+     * @notice Get the principal balance of the user, which is the amount of tokens they have deposited without the interest
+     * @param _user The user to get the principal balance for
+     * @return The principal balance of the user
+     */
     function principalBalanceOf(address _user) external view returns (uint256) {
         return super.balanceOf(_user);
     }
@@ -118,7 +123,6 @@ contract RebaseToken is ERC20, Ownable, AccessControl {
             s_userInterestRate[_recipient] = s_userInterestRate[_sender];
         }
         return super.transferFrom(_sender, _recipient, _amount);
-
     }
 
     /**
@@ -153,6 +157,14 @@ contract RebaseToken is ERC20, Ownable, AccessControl {
         _mint(_user, balanceIncrease);
         // Update the user's last updated timestamp to reflect this most recent time their interest was minted to them.
         s_userLastUpdatedTimestamp[_user] = block.timestamp;
+    }
+
+    /**
+     * @notice Get the interest rate that is currently set in the contract. Any future depositors will receive this interest rate
+     * @return The interest rate for the contract
+     */
+    function getInterestRate() external view returns (uint256) {
+        return s_interestRate;
     }
 
     /**
