@@ -26,6 +26,14 @@ contract RebaseToken is ERC20, Ownable, AccessControl {
     constructor() Ownable(msg.sender) ERC20("Rebase Token", "RBT") {}
 
     /**
+     * @dev grants the mint and burn role to an address. This is only called by the protocol owner
+     * @param _account the address to grant the role to
+     */
+    function grantMintAndBurnRole(address _account) external onlyOwner {
+        _grantRole(MINT_AND_BURN_ROLE, _account);
+    }
+
+    /**
      * @notice Set the interest rate in the contract
      * @param _newInterestRate The new interest rate to set
      * @dev The interest rate can only decrease
