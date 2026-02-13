@@ -38,7 +38,7 @@ contract RebaseToken is ERC20, Ownable, AccessControl {
      * @param _newInterestRate The new interest rate to set
      * @dev The interest rate can only decrease
      */
-    function setInterestRate(uint256 _newInterestRate) external {
+    function setInterestRate(uint256 _newInterestRate) external onlyOwner {
         if (_newInterestRate >= s_interestRate) {
             revert RebaseToken__InterestRateCanOnlyDecrease(s_interestRate, _newInterestRate);
         }
@@ -59,10 +59,12 @@ contract RebaseToken is ERC20, Ownable, AccessControl {
      * Mint the user tokens when they deposit into the vault
      * @param _to The user to mint the tokens to
      * @param _amount The amount of tokens to mint
+     * @param _userInterestRate The interest rate of the user. This is either the contract interest rate if the user is depositing or the user's interest rate from the source token if the user is bridging
+     * @dev this function increases the total supply
      */
-    function mint(address _to, uint256 _amount) external {
+    function mint(address _to, uint256 _amount, uint256 _userInterestRate) public onlyRole(MINT_AND_BURN_ROLE) {
         _mintAccruedInterest(_to);
-        s_userInterestRate[_to] = s_interestRate;
+        s_userInterestRate[_to] = _userInterestRate;
         _mint(_to, _amount);
     }
 
@@ -71,7 +73,7 @@ contract RebaseToken is ERC20, Ownable, AccessControl {
      * @param _from The user to burn the tokens from
      * @param _amount The amount of tokens to burn
      */
-    function burn(address _from, uint256 _amount) external {
+    function burn(address _from, uint256 _amount) public onlyRole(MINT_AND_BURN_ROLE) {
         if (_amount == type(uint256).max) {
             _amount = balanceOf(_from);
         }
